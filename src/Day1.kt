@@ -1,45 +1,15 @@
-import java.io.File
 import kotlin.math.abs
-import kotlin.system.measureNanoTime
 
 val regex = Regex("(\\d+)\\s+(\\d+)")
 
 fun main() {
-    measureTime {
-        part2()
-    }
-}
-
-// "20,373,490" is the correct answer. 🐢
-private fun part2() {
-    val input = getInput()
-
-    val left = ArrayList<Int>(1000)
-    val right = mutableMapOf<Int, Int>()
-
-    for (line in input) {
-        val gv = regex.find(line)?.groupValues ?: continue
-
-        left += gv[1].toInt()
-
-        val rightNum = gv[2].toInt()
-        val occurrences = right[rightNum] ?: 0
-        right[rightNum] = occurrences + 1
-    }
-
-    var similarity = 0
-
-    for (n in left) {
-        similarity += n * (right[n] ?: 0)
-    }
-
-    println(similarity)
+    println(part2())
 }
 
 // "1,722,302" is the correct answer 🐢
 @Suppress("unused")
-private fun part1() {
-    val lines = getInput()
+private fun part1(): Int {
+    val lines = getInput("day1_input.txt")
 
     val left = ArrayList<Int>(1000)
     val right = ArrayList<Int>(1000)
@@ -63,19 +33,31 @@ private fun part1() {
         total += abs(leftMin - rightMin)
     }
 
-    println(total)
+    return total
 }
 
-private fun getInput(): List<String> {
-    val lines = object {}.javaClass.getResource("day1_input.txt")?.let { url ->
-        File(url.toURI()).readLines()
-    }.orEmpty()
-    return lines
-}
+// "20,373,490" is the correct answer. 🐢
+private fun part2(): Int {
+    val input = getInput("day1_input.txt")
 
-private inline fun measureTime(block: () -> Unit) {
-    val time = measureNanoTime {
-        block()
+    val left = ArrayList<Int>(1000)
+    val right = mutableMapOf<Int, Int>()
+
+    for (line in input) {
+        val gv = regex.find(line)?.groupValues ?: continue
+
+        left += gv[1].toInt()
+
+        val rightNum = gv[2].toInt()
+        val occurrences = right[rightNum] ?: 0
+        right[rightNum] = occurrences + 1
     }
-    println("Time: ${time / 1_000} micro seconds")
+
+    var similarity = 0
+
+    for (n in left) {
+        similarity += n * (right[n] ?: 0)
+    }
+
+    return similarity
 }
