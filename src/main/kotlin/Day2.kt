@@ -2,28 +2,25 @@ import kotlin.math.abs
 
 private const val MAX_DELTA = 3
 
-fun main() {
-    println(part2())
-}
+object Day2 {
 
-// 269
-@Suppress("unused")
-private fun part1(): Int {
-    return getInput("day2_input.txt").count {
-        isSafe(splitToNumbers(it))
+    fun part1(): Int {
+        return getInputLines("day2_input.txt").count {
+            isSafe(splitToNumbers(it))
+        }
+    }
+
+    // please don't look at it…
+    fun part2(): Int {
+        return getInputLines("day2_input.txt").count { line ->
+            val numbers = splitToNumbers(line)
+            numbers.indices.firstOrNull { idx ->
+                isSafe(getListExcluding(numbers, idx))
+            } != null
+        }
     }
 }
 
-// please don't look at it…
-// 337
-private fun part2(): Int {
-    return getInput("day2_input.txt").count { line ->
-        val numbers = splitToNumbers(line)
-        numbers.indices.firstOrNull { idx ->
-            isSafe(getListExcluding(numbers, idx))
-        } != null
-    }
-}
 
 private fun getListExcluding(numbers: List<Int>, withoutIdx: Int): List<Int> {
     if (withoutIdx == 0) return numbers.subList(1, numbers.size)
