@@ -1,6 +1,6 @@
 import kotlin.math.abs
 
-private val regex = Regex("(\\d+)\\s+(\\d+)")
+private val REGEX = Regex("(\\d+)\\s+(\\d+)")
 
 object Day1 {
 
@@ -11,24 +11,21 @@ object Day1 {
         val right = ArrayList<Int>(1000)
 
         for (line in lines) {
-            val gv = regex.find(line)?.groupValues ?: continue
+            val gv = REGEX.find(line)?.groupValues ?: continue
 
             left += gv[1].toInt()
             right += gv[2].toInt()
         }
-
         left.sort()
         right.sort()
 
         var total = 0
-
         for (i in 0 until left.size) {
             val leftMin = left[i]
             val rightMin = right[i]
 
             total += abs(leftMin - rightMin)
         }
-
         return total
     }
 
@@ -39,7 +36,7 @@ object Day1 {
         val right = mutableMapOf<Int, Int>()
 
         for (line in input) {
-            val gv = regex.find(line)?.groupValues ?: continue
+            val gv = REGEX.find(line)?.groupValues ?: continue
 
             left += gv[1].toInt()
 

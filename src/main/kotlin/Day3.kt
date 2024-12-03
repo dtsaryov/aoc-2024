@@ -5,16 +5,16 @@ private val MUL_REGEX = Regex("mul\\((\\d+),(\\d+)\\)")
 object Day3 {
 
     fun part1(): Int {
-        val input = getInputText("day3_input.txt")
-
-        return MUL_REGEX.findAll(input).map { match ->
-            val (_, n1, n2) = match.groupValues
-            n1.toInt() * n2.toInt()
-        }.sum()
+        return MUL_REGEX
+            .findAll(getInputText("day3_input.txt"))
+            .sumOf { match ->
+                val (_, n1, n2) = match.groupValues
+                n1.toInt() * n2.toInt()
+            }
     }
 
-    fun part2(testInput: String? = null): Int {
-        val input = testInput ?: getInputText("day3_input.txt")
+    fun part2(): Int {
+        val input = getInputText("day3_input.txt")
 
         var result = 0
 
