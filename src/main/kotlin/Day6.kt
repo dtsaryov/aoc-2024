@@ -25,12 +25,13 @@ object Day6 {
             for (j in 0..field[0].lastIndex) {
 
                 // reset
-                val copy = getCopy(field).apply { this[i][j] = false }
+                val original = field[i][j]
+                field[i][j] = false
                 guard = originalGuard.copy()
                 visited = mutableMapOf()
 
-                while (guard.canMove(copy)) {
-                    val (x, y) = guard.move(copy)
+                while (guard.canMove(field)) {
+                    val (x, y) = guard.move(field)
 
                     val count = visited.compute(x to y) { _, v -> (v ?: 0) + 1 }
 
@@ -39,22 +40,12 @@ object Day6 {
                         break
                     }
                 }
+
+                field[i][j] = original
             }
         }
 
         return variants
-    }
-
-    private fun getCopy(field: Array<Array<Boolean>>): Array<Array<Boolean>> {
-        val fieldList = mutableListOf<Array<Boolean>>()
-        field.withIndex().forEach { (lineIdx, line) ->
-            val lineArray = mutableListOf<Boolean>()
-            for (colIdx in line.indices) {
-                lineArray += field[lineIdx][colIdx]
-            }
-            fieldList += lineArray.toTypedArray()
-        }
-        return fieldList.toTypedArray()
     }
 
     private fun readField(inputFileName: String): Pair<Array<Array<Boolean>>, Guard> {
