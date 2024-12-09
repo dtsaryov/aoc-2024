@@ -14,10 +14,10 @@ class Day9Test {
     }
 
     @Test
-    fun testExample1Defragment() {
+    fun testExample1Fragment() {
         assertEquals(
             "022111222......",
-            Day9.defragment("day9_test_input.txt")
+            Day9.fragment("day9_test_input.txt")
                 .joinToString("")
                 .replace("-1", "."))
     }
@@ -32,25 +32,53 @@ class Day9Test {
     }
 
     @Test
-    fun testExample2Defragment() {
+    fun testExample2Fragment() {
         assertEquals(
             "0099811188827773336446555566..............",
-            Day9.defragment("day9_test_input2.txt")
+            Day9.fragment("day9_test_input2.txt")
                 .joinToString("")
                 .replace("-1", "."))
     }
 
     @Test
-    fun testExample2DefragmentChecksum() {
+    fun testExample2FragmentChecksum() {
         assertEquals(
             BigDecimal(1928),
-            Day9.getDefragmentChecksum("day9_test_input2.txt"))
+            Day9.getFragmentedChecksum("day9_test_input2.txt"))
     }
 
     @Test
-    fun testDefragmentChecksum() {
+    fun testExample2DefragmentedChecksum() {
+        assertEquals(
+            BigDecimal(2858),
+            Day9.getDefragmentedChecksum("day9_test_input2.txt"))
+    }
+
+    @Test
+    fun testExample3DefragmentedChecksum() {
+        assertEquals(
+            BigDecimal(4),
+            Day9.getDefragmentedChecksum("day9_test_input3.txt"))
+    }
+
+    @Test
+    fun testExample4DefragmentedChecksum() {
+        assertEquals(
+            BigDecimal(15),
+            Day9.getDefragmentedChecksum("day9_test_input4.txt"))
+    }
+
+    @Test
+    fun testFragmentedChecksum() {
         assertEquals(
             BigDecimal(6461289671426),
-            Day9.getDefragmentChecksum("day9_input.txt"))
+            Day9.getFragmentedChecksum("day9_input.txt"))
+    }
+
+    @Test
+    fun testDefragmentedChecksum() {
+        assertEquals(
+            BigDecimal(6488291456470),
+            Day9.getDefragmentedChecksum("day9_input.txt"))
     }
 }
