@@ -1,6 +1,6 @@
 object Day12 {
 
-    fun getFencePrice(inputFileName: String): Long {
+    fun getFencePriceByPerimeter(inputFileName: String): Long {
         val map = getPlantsMap(inputFileName)
         val visited = mutableSetOf<Point>()
 
@@ -15,6 +15,10 @@ object Day12 {
         }
 
         return price
+    }
+
+    fun getFencePriceBySides(inputFileName: String): Long {
+        return -1
     }
 
     private fun countRegion(
