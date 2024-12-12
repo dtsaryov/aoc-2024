@@ -11,3 +11,5 @@ fun getInputText(fileName: String): String {
         File(url.toURI()).readText()
     }.orEmpty()
 }
+
+data class Point(val x: Int, val y: Int)

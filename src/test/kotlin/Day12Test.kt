@@ -20,6 +20,6 @@ class Day12Test {
 
     @Test
     fun testPart1() {
-        assertEquals(-1, Day12.getFencePrice("day12_input.txt"))
+        assertEquals(1374934, Day12.getFencePrice("day12_input.txt"))
     }
 }
