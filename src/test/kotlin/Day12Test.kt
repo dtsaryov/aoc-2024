@@ -44,7 +44,12 @@ class Day12Test {
     }
 
     @Test
+    fun testExample6Part2() {
+        assertEquals(64, Day12.getFencePriceBySides("day12_test_input6.txt"))
+    }
+
+    @Test
     fun testPart2() {
-        assertEquals(1374934, Day12.getFencePriceBySides("day12_input.txt"))
+        assertEquals(841078, Day12.getFencePriceBySides("day12_input.txt"))
     }
 }
