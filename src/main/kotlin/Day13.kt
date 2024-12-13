@@ -1,3 +1,4 @@
+import java.math.BigDecimal
 import kotlin.math.round
 
 private val REGEX_A = Regex("Button A: X\\+(\\d+), Y\\+(\\d+)")
@@ -7,54 +8,37 @@ private val REGEX_PRIZE = Regex("Prize: X=(\\d+), Y=(\\d+)")
 private const val A_COST = 3
 private const val B_COST = 1
 
+private val PART_2_ADD = BigDecimal(10000000000000)
+
 object Day13 {
 
-    fun part1(inputFileName: String): Long {
+    fun part1(inputFileName: String): Long = countTokens(inputFileName, BigDecimal.ZERO)
+
+    fun part2(inputFileName: String): Long = countTokens(inputFileName, PART_2_ADD)
+
+    private fun countTokens(inputFileName: String, prizeDelta: BigDecimal): Long {
         var tokens = 0L
 
-        var ax = 0
-        var ay = 0
-        var bx = 0
-        var by = 0
+        for (gameSet in getInputLines(inputFileName).windowed(3, 4)) {
+            val (_, adx, ady) = REGEX_A.find(gameSet[0])?.groupValues!!
+            val a = BigPoint(adx.toBigDecimal(), ady.toBigDecimal())
 
-        for (line in getInputLines(inputFileName)) {
-            if (REGEX_A.matches(line)) {
-                val (_, x, y) = REGEX_A.find(line)?.groupValues!!
-                ax = x.toInt()
-                ay = y.toInt()
-            } else if (REGEX_B.matches(line)) {
-                val (_, x, y) = REGEX_B.find(line)?.groupValues!!
-                bx = x.toInt()
-                by = y.toInt()
-            } else if (REGEX_PRIZE.matches(line)) {
-                val (_, x, y) = REGEX_PRIZE.find(line)?.groupValues!!
+            val (_, bdx, bdy) = REGEX_B.find(gameSet[1])?.groupValues!!
+            val b = BigPoint(bdx.toBigDecimal(), bdy.toBigDecimal())
 
-                tokens += solveGame(
-                    Game(
-                        Point(ax, ay),
-                        Point(bx, by),
-                        Point(x.toInt(), y.toInt())
-                    )
-                )
-            }
+            val (_, x, y) = REGEX_PRIZE.find(gameSet[2])?.groupValues!!
+            val prize = BigPoint(x.toBigDecimal() + prizeDelta, y.toBigDecimal() + prizeDelta)
+
+            tokens += solveGame(Game(a, b, prize))
         }
 
         return tokens
     }
 
     private fun solveGame(game: Game): Long {
-        val adx = game.buttonA.x
-        val ady = game.buttonA.y
-
-        val bdx = game.buttonB.x
-        val bdy = game.buttonB.y
-
-        val x = game.prize.x
-        val y = game.prize.y
-
         val (a, b) = solveSystem(
-            adx.toDouble(), bdx.toDouble(), x.toDouble(),
-            ady.toDouble(), bdy.toDouble(), y.toDouble()
+            game.a.x.toDouble(), game.b.x.toDouble(), game.prize.x.toDouble(),
+            game.a.y.toDouble(), game.b.y.toDouble(), game.prize.y.toDouble()
         )
 
         if (round(a) != a || round(b) != b) return 0
@@ -63,15 +47,10 @@ object Day13 {
     }
 
     private fun solveSystem(
-        adx: Double,
-        bdx: Double,
-        x: Double,
-        ady: Double,
-        bdy: Double,
-        y: Double
+        adx: Double, bdx: Double, x: Double,
+        ady: Double, bdy: Double, y: Double
     ): Pair<Double, Double> {
         val det = adx * bdy - bdx * ady
-
         if (det == 0.0) throw IllegalArgumentException("No solution")
 
         val a = (x * bdy - bdx * y) / det
@@ -81,4 +60,6 @@ object Day13 {
     }
 }
 
-private class Game(val buttonA: Point, val buttonB: Point, val prize: Point)
+private class Game(val a: BigPoint, val b: BigPoint, val prize: BigPoint)
+
+private data class BigPoint(val x: BigDecimal, val y: BigDecimal)
