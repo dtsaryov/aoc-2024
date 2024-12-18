@@ -11,7 +11,7 @@ private val DIRECTIONS: Pair<IntArray, IntArray> = Pair(
     intArrayOf(1, 0, -1, 0)  // X
 )
 
-private data class Path(
+data class Path(
     val x: Int,
     val y: Int,
     val direction: Int,
