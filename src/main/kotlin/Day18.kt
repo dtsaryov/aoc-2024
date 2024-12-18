@@ -19,6 +19,30 @@ object Day18 {
         return searchPath(maze, Point(0, 0))
     }
 
+    fun part2(inputFileName: String, m: Int, n: Int): Pair<Int, Int> {
+        val input = getInputLines(inputFileName)
+        val maze = Array(n) { CharArray(m) }
+
+        // BFS FTW!
+        var i = 0
+        while (true) {
+            input.take(i).forEach { line ->
+                val (x, y) = line.split(',')
+                maze[y.toInt()][x.toInt()] = WALL
+            }
+
+            if (searchBfs(maze, Point(0, 0), m, n, mutableSetOf())) {
+                i++
+            } else {
+                break
+            }
+        }
+
+        return input[i - 1].split(',').let { (x, y) ->
+            x.toInt() to y.toInt()
+        }
+    }
+
     private fun searchPath(maze: Array<CharArray>, start: Point): Int {
         val (yDirections, xDirections) = DIRECTIONS
 
@@ -43,8 +67,8 @@ object Day18 {
         enq(startX, startY, 0, 0)
 
         while (true) {
-            val (j, i, _, cost) = queue.remove()
-                ?: error("No more paths")
+            val (j, i, _, cost) = queue.poll()
+                ?: return -1
 
             if (visited[i][j]) continue
             visited[i][j] = true
@@ -63,5 +87,30 @@ object Day18 {
                 enq(newY, newX, newD, cost + 1)
             }
         }
+    }
+
+    private fun searchBfs(maze: Array<CharArray>, pos: Point, m: Int, n: Int, visited: MutableSet<Point>): Boolean {
+        val (x, y) = pos
+
+        if (x !in 0..<m ||
+            y !in 0..<n ||
+            maze[y][x] == WALL ||
+            !visited.add(pos)
+        ) return false
+
+        if (y == n - 1 && x == m - 1) return true
+
+        return (0..3).map { di ->
+            val newD = di % 4
+
+            val (yDirections, xDirections) = DIRECTIONS
+
+            val newX = x + xDirections[newD]
+            val newY = y + yDirections[newD]
+
+            Point(newX, newY)
+        }.firstOrNull { newPos ->
+            searchBfs(maze, newPos, m, n, visited)
+        } != null
     }
 }
