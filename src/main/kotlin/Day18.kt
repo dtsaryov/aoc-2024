@@ -19,30 +19,6 @@ object Day18 {
         return searchPath(maze, Point(0, 0))
     }
 
-    fun part2(inputFileName: String, m: Int, n: Int): Pair<Int, Int> {
-        val input = getInputLines(inputFileName)
-        val maze = Array(n) { CharArray(m) }
-
-        // BFS FTW!
-        var i = 0
-        while (true) {
-            input.take(i).forEach { line ->
-                val (x, y) = line.split(',')
-                maze[y.toInt()][x.toInt()] = WALL
-            }
-
-            if (searchBfs(maze, Point(0, 0), m, n, mutableSetOf())) {
-                i++
-            } else {
-                break
-            }
-        }
-
-        return input[i - 1].split(',').let { (x, y) ->
-            x.toInt() to y.toInt()
-        }
-    }
-
     private fun searchPath(maze: Array<CharArray>, start: Point): Int {
         val (yDirections, xDirections) = DIRECTIONS
 
@@ -87,6 +63,26 @@ object Day18 {
                 enq(newY, newX, newD, cost + 1)
             }
         }
+    }
+
+    fun part2(inputFileName: String, m: Int, n: Int): Pair<Int, Int> {
+        val input = getInputLines(inputFileName).map { line ->
+            val (x, y) = line.split(',')
+            x.toInt() to y.toInt()
+        }
+        val maze = Array(n) { CharArray(m) }
+        val start = Point(0, 0)
+
+        // BFS FTW!
+        var i = 0
+        do {
+            i++
+            input.take(i).forEach { (x, y) ->
+                maze[y][x] = WALL
+            }
+        } while (searchBfs(maze, start, m, n, mutableSetOf()))
+
+        return input[i - 1]
     }
 
     private fun searchBfs(maze: Array<CharArray>, pos: Point, m: Int, n: Int, visited: MutableSet<Point>): Boolean {
